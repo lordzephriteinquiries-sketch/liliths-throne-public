@@ -1,3 +1,4 @@
+```java
 package com.lilithsthrone.game.character.npc.dominion;
 
 import java.time.Month;
@@ -135,7 +136,7 @@ public class Kruger extends NPC {
 		}
 		
 		if(setOrientation) {
-			this.setSexualOrientation(SexualOrientation.GYNEPHILIC);
+			this.setSexualOrientation(SexualOrientation.AMBIPHILIC);
 		}
 
 		if(setHistory) {
@@ -176,21 +177,12 @@ public class Kruger extends NPC {
 		this.setAssHair(BodyHair.FOUR_NATURAL);
 		this.setPubicHair(BodyHair.FOUR_NATURAL);
 		this.setFacialHair(BodyHair.ZERO_NONE);
-
-//		this.setHandNailPolish(new Covering(BodyCoveringType.MAKEUP_NAIL_POLISH_HANDS, PresetColour.COVERING_RED));
-//		this.setFootNailPolish(new Covering(BodyCoveringType.MAKEUP_NAIL_POLISH_FEET, PresetColour.COVERING_RED));
-//		this.setBlusher(new Covering(BodyCoveringType.MAKEUP_BLUSHER, PresetColour.COVERING_RED));
-//		this.setLipstick(new Covering(BodyCoveringType.MAKEUP_LIPSTICK, PresetColour.COVERING_RED));
-//		this.setEyeLiner(new Covering(BodyCoveringType.MAKEUP_EYE_LINER, PresetColour.COVERING_BLACK));
-//		this.setEyeShadow(new Covering(BodyCoveringType.MAKEUP_EYE_SHADOW, PresetColour.COVERING_PURPLE));
 		
 		// Face:
 		this.setFaceVirgin(true);
 		this.setLipSize(LipSize.ONE_AVERAGE);
 		this.setFaceCapacity(Capacity.ZERO_IMPENETRABLE, true);
-		// Throat settings and modifiers
 		this.setTongueLength(TongueLength.ZERO_NORMAL.getMedianValue());
-		// Tongue modifiers
 		
 		// Chest:
 		this.setNippleVirgin(true);
@@ -198,18 +190,16 @@ public class Kruger extends NPC {
 		this.setBreastShape(BreastShape.ROUND);
 		this.setNippleSize(NippleSize.ZERO_TINY);
 		this.setAreolaeSize(AreolaeSize.ZERO_TINY);
-		// Nipple settings and modifiers
 		
 		// Ass:
 		this.setAssVirgin(true);
 		this.setAssBleached(false);
 		this.setAssSize(AssSize.TWO_SMALL);
 		this.setHipSize(HipSize.TWO_NARROW);
-		this.setAssCapacity(Capacity.ZERO_IMPENETRABLE, true);
-		this.setAssWetness(Wetness.ZERO_DRY);
+		this.setAssCapacity(Capacity.TWO_TIGHT, true);
+		this.setAssWetness(Wetness.ONE_SLIGHTLY_MOIST);
 		this.setAssElasticity(OrificeElasticity.ONE_RIGID.getValue());
 		this.setAssPlasticity(OrificePlasticity.THREE_RESILIENT.getValue());
-		// Anus modifiers
 		
 		// Penis:
 		this.setPenisVirgin(false);
@@ -218,13 +208,6 @@ public class Kruger extends NPC {
 		this.setTesticleSize(TesticleSize.THREE_LARGE);
 		this.setPenisCumStorage(60);
 		this.fillCumToMaxStorage();
-		// Leave cum as normal value
-		
-		// Vagina:
-		// No vagina
-		
-		// Feet:
-		// Foot shape
 	}
 	
 	@Override
@@ -233,8 +216,6 @@ public class Kruger extends NPC {
 		this.unequipAllClothingIntoVoid(true, true);
 
 		this.equipClothingFromNowhere(Main.game.getItemGen().generateClothing("innoxia_groin_briefs", PresetColour.CLOTHING_BLACK, false), true, this);
-//		this.equipClothingFromNowhere(Main.game.getItemGen().generateClothing("innoxia_sock_socks", PresetColour.CLOTHING_BLACK, false), true, this);
-//		this.equipClothingFromNowhere(Main.game.getItemGen().generateClothing("innoxia_foot_mens_smart_shoes", PresetColour.CLOTHING_BLACK, false), true, this);
 		this.equipClothingFromNowhere(Main.game.getItemGen().generateClothing("innoxia_leg_trousers", PresetColour.CLOTHING_BLACK, false), true, this);
 		this.equipClothingFromNowhere(Main.game.getItemGen().generateClothing("innoxia_torso_long_sleeved_shirt", PresetColour.CLOTHING_WHITE, false), true, this);
 		this.equipClothingFromNowhere(Main.game.getItemGen().generateClothing("innoxia_torsoOver_suit_jacket", PresetColour.CLOTHING_BLACK, false), true, this);
@@ -261,23 +242,17 @@ public class Kruger extends NPC {
 	
 	@Override
 	public boolean getSexBehaviourDeniesRequests(GameCharacter requestingCharacter, SexType sexTypeRequest) {
-		return true;
+		return false;
 	}
-
-	// Sex:
-
-//	@Override
-//	public SexPace getSexPaceDomPreference() {
-//		return SexPace.DOM_NORMAL;
-//	}
-	
-//	@Override
-//	public boolean isHappyToBeInSlot(AbstractSexPosition position, SexSlot slot, GameCharacter target) {
-//		return slot==SexSlotSitting.SITTING;
-//	}
 
 	@Override
 	public SexType getForeplayPreference(GameCharacter target) {
+		if(!target.isFeminine() && target.hasPenis() && target.isAbleToAccessCoverableArea(CoverableArea.PENIS, true)
+				&& Main.game.isAnalContentEnabled()
+				&& this.isAbleToAccessCoverableArea(CoverableArea.ANUS, true)) {
+			return new SexType(SexParticipantType.NORMAL, SexAreaOrifice.ANUS, SexAreaPenetration.PENIS);
+		}
+		
 		if(target.isAbleToAccessCoverableArea(CoverableArea.MOUTH, true)) {
 			return new SexType(SexParticipantType.NORMAL, SexAreaPenetration.PENIS, SexAreaOrifice.MOUTH);
 		} else {
@@ -287,6 +262,12 @@ public class Kruger extends NPC {
 	
 	@Override
 	public SexType getMainSexPreference(GameCharacter target) {
+		if(!target.isFeminine() && target.hasPenis() && target.isAbleToAccessCoverableArea(CoverableArea.PENIS, true)
+				&& Main.game.isAnalContentEnabled()
+				&& this.isAbleToAccessCoverableArea(CoverableArea.ANUS, true)) {
+			return new SexType(SexParticipantType.NORMAL, SexAreaOrifice.ANUS, SexAreaPenetration.PENIS);
+		}
+		
 		if(target.hasVagina() && target.isAbleToAccessCoverableArea(CoverableArea.VAGINA, true)) {
 			return new SexType(SexParticipantType.NORMAL, SexAreaPenetration.PENIS, SexAreaOrifice.VAGINA);
 			
@@ -299,3 +280,4 @@ public class Kruger extends NPC {
 	}
 	
 }
+```
